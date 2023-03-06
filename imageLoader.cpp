@@ -1,7 +1,4 @@
 /*************************************************************************************************
- * File: imageLoader.cpp
- * Date: 10/16/2017
- *
  * Description: This file is meant to be a file of load/write functions for the original program.
  *      The file includes both a useful typedef to shorten unsigned chars into bytes and a struct
  *      meant to make accessing image data easier.
@@ -9,7 +6,7 @@
 #include "lodepng.h"
 #include <string>
 
-typedef unsigned char byte; // most useful typedef ever
+typedef unsigned char byte;
 
 /************************************************************************************************
  * struct imgData(byte*, uint, uint)
