@@ -19,6 +19,10 @@ void copyImgShape(imgData& src, imgData& dst) {
 		dst.pixels[i] = 0;
 }
 
+int convertCoordinates(int x, int y, int width) {
+	return y * width + x;
+}
+
 int main()
 {
 	imgData image, out, hist1, hist2;
@@ -32,6 +36,8 @@ int main()
 
 	image = loadImage(file);
 
+	// writeImage(file, "grayscale", image);
+
 	copyImgShape(image, out);
 
 	histEqualize(image, out); //eq
@@ -39,6 +45,7 @@ int main()
 	writeImage(file, "output", image);
 	
 	printf("Output png file generated!");
+
 
 	// namedWindow("Original", WINDOW_AUTOSIZE);
 	// imshow("Original", image);
@@ -71,9 +78,6 @@ int main()
 	return 0;
 }
 
-int convertCoordinates(int x, int y, int width) {
-	return y * width + x;
-}
 
 void histEqualize(imgData &src, imgData &dst)
 {
@@ -84,16 +88,21 @@ void histEqualize(imgData &src, imgData &dst)
 			gray[src.pixels[convertCoordinates(x, y, src.width)]]++;
 		} 
 	} 
+
+	printf("debug");
 	
 	for (int i = 0; i < 255; i++) { //calculate cdf (Cumulative distribution function)
 		gray[i + 1] += gray[i];
 	}
 
-	for (int y = 0; y < src.height; y++) {
+	printf("debug 2");
+
+	for (int y = 0; y < src.width; y++) {
 		for (int x = 0; x < src.width; x++) {
 			// h(v) = round(((cdf(v) - mincdf) / (M * N) - mincdf) * (L - 1)) ; L = 2^8
 			// dst.at<uchar>(y, x) = (uchar)round((((double)gray[(int)src.at<uchar>(y, x)] - mincdf) / (double)(src.rows * src.cols - mincdf)) * (double)255);
-			dst.pixels[convertCoordinates(x, y, src.width)] = gray[convertCoordinates(x, y, src.width)];
+			dst.pixels[convertCoordinates(x, y, src.width)] = gray[src.pixels[(x, y, src.width)]];
 		}
+		printf("%f percent\n", (float)(y+1) / src.width * 100);
 	}
 }
